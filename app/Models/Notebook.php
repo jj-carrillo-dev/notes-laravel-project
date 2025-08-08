@@ -10,4 +10,5 @@ class Notebook extends Model
         'user_id',
         'name'
     ];
+
 }

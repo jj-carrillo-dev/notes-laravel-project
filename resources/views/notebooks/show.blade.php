@@ -17,8 +17,8 @@
                         <span class="font-bold">Last changed:</span> {{ $notebook->updated_at->diffForHumans() }}
                     </p>
                 @endif
-                 <x-link-button class="ml-auto" href="{{ route('notebooks.edit', $note) }}">
-                    Edit Note
+                 <x-link-button class="ml-auto" href="{{ route('notebooks.edit', $notebook) }}">
+                    Edit Notebook
                 </x-link-button>
             </div>
             <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">

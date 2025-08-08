@@ -12,10 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notebooks', function (Blueprint $table) {
+        Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignIDFor(User::class);
+            $table->uuid();
+            $table->string('title');
+            $table->longText('text');
+            $table->foreignIdFor(User::class);
+            $table->foreignId('notebook_id')->nullable()->constrained('notebooks')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notebooks');
+        Schema::dropIfExists('notes');
     }
 };

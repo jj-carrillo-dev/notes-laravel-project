@@ -45,4 +45,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+        /**
+     * Get the notebooks for the user.
+     */
+    public function notebooks()
+    {
+        return $this->hasMany(Notebook::class);
+    }
 }

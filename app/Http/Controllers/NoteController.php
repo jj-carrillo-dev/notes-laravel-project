@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Notebook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -24,7 +25,8 @@ class NoteController extends Controller
      */
     public function create()
     {
-        return view('notes.create');
+        $notebooks = Auth::user()->notebooks;
+        return view('notes.create', compact('notebooks'));
     }
 
     /**
@@ -34,16 +36,19 @@ class NoteController extends Controller
     {
         $request->validate([
                             'title'=>'required|max:120',
-                            'text'=>'required'
+                            'text'=>'required',
+                            'notebook_id'=>'required'
                         ]);
         $note = new Note([
             'user_id' => Auth::id(),
             'uuid' => Str::uuid(),
             'title' => $request->title,
+            'notebook_id' => $request->notebook_id,
             'text' => $request->text
         ]);
         $note->save();
-        return view('notes.show',['note' => $note]);
+
+        return to_route('notes.show',['note' => $note])->with('success', 'Note Created');
     }
 
     /**
@@ -65,7 +70,8 @@ class NoteController extends Controller
         if ($note->user_id !== Auth::id()) {
             abort(403);
         }
-        return view('notes.edit',['note' => $note]);
+        $notebooks = Auth::user()->notebooks;
+        return view('notes.edit',['note' => $note, 'notebooks' => $notebooks]);
     }
 
     /**
@@ -73,7 +79,23 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        //
+        if ($note->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+                    'title'=>'required|max:120',
+                    'text'=>'required',
+                    'notebook_id'=>'required'
+        ]);
+
+        $note->update([
+            'title' => $request->title,
+            'notebook_id' => $request->notebook_id,
+            'text' => $request->text
+        ]);
+
+        return to_route('notes.show',['note' => $note])->with('success', 'Changes Saved');
     }
 
     /**
@@ -81,6 +103,12 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        //
+        if ($note->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $note->delete();
+
+        return to_route('notes.index')->with('success', 'Note Deleted');
     }
 }

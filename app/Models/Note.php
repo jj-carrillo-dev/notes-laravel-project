@@ -11,4 +11,12 @@ class Note extends Model
     public function getRouteKeyName(){
         return 'uuid';
     }
+
+    /**
+     * Get the notebook that owns the note.
+     */
+    public function notebook()
+    {
+        return $this->belongsTo(Notebook::class);
+    }
 }
