@@ -15,8 +15,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $user_id = Auth::id();
-        $notes = Note::where('user_id', $user_id)->paginate(5);
+        $notes = Auth::user()->notes()->paginate(5);
         return view("notes.index")->with('notes',$notes);
     }
 
@@ -39,14 +38,13 @@ class NoteController extends Controller
                             'text'=>'required',
                             'notebook_id'=>'required'
                         ]);
-        $note = new Note([
-            'user_id' => Auth::id(),
+
+        $note = Auth::user()->notes()->create([
             'uuid' => Str::uuid(),
             'title' => $request->title,
             'notebook_id' => $request->notebook_id,
             'text' => $request->text
         ]);
-        $note->save();
 
         return to_route('notes.show',['note' => $note])->with('success', 'Note Created');
     }
@@ -56,7 +54,7 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if ($note->user()->isNot(Auth::user())) {
             abort(403);
         }
         return view('notes.show',['note' => $note]);
@@ -67,7 +65,7 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if ($note->user()->isNot(Auth::user())) {
             abort(403);
         }
         $notebooks = Auth::user()->notebooks;
@@ -79,7 +77,7 @@ class NoteController extends Controller
      */
     public function update(Request $request, Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if ($note->user()->isNot(Auth::user())) {
             abort(403);
         }
 
@@ -103,12 +101,12 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        if ($note->user_id !== Auth::id()) {
+        if ($note->user()->isNot(Auth::user())) {
             abort(403);
         }
 
         $note->delete();
 
-        return to_route('notes.index')->with('success', 'Note Deleted');
+        return to_route('notes.index')->with('success', 'Note moved to trash');
     }
 }

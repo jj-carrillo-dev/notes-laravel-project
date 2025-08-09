@@ -46,7 +46,15 @@ class User extends Authenticatable
         ];
     }
 
-        /**
+    /**
+     * Get the notes for the user.
+     */
+    public function notes()
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    /**
      * Get the notebooks for the user.
      */
     public function notebooks()

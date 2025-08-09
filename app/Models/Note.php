@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Note extends Model
 {
+    use HasFactory, SoftDeletes;
+    
     protected $guarded = [];
 
     public function getRouteKeyName(){
@@ -13,10 +17,16 @@ class Note extends Model
     }
 
     /**
+     * Get the user that owns the note.
+     */
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    /**
      * Get the notebook that owns the note.
      */
-    public function notebook()
-    {
+    public function notebook(){
         return $this->belongsTo(Notebook::class);
     }
 }

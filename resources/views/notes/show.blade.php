@@ -11,7 +11,11 @@
             <x-alert-success>
                 {{ session('success') }}
             </x-alert-success>
-
+            <p>
+                <span class="inline-flex items-center px-2.5 py-1.5 rounded text-sm font-medium bg-blue-100 text-blue-800 border border-blue-600">
+                    {{ $note->notebook->name }}
+                </span>
+            </p>
             <div class="flex gap-6">
                 <p class="opacity-70">
                     <span class="font-bold">Created:</span> {{ $note->created_at->diffForHumans() }}
@@ -31,12 +35,12 @@
                     <button type="button" 
                             class="bg-red-500 hover:bg-red-600 focus:bg-red-600 px-4 py-2 text-white font-bold rounded-lg"
                             onclick="showModal('delete-modal-{{ $note->id }}')">
-                        Delete
+                        Move to Trash
                     </button>
                     <div id="delete-modal-{{ $note->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900 bg-opacity-50">
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm mx-auto">
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Confirmación de eliminación</h3>
-                            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">¿Estás seguro de que quieres eliminar esta nota? Esta acción no se puede deshacer.</p>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">Confirmation</h3>
+                            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">¿Move to trash?.</p>
     
                             <div class="mt-4 flex justify-end gap-2">
                                 <button type="button"
@@ -66,12 +70,10 @@
                 </script>
             </div>
             <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">
-                <h2 class="font-bold text-4xl text-indigo-600">
+                <h3 class="font-bold text-2xl text-indigo-600">
                     {{ $note->title }}
-                </h2>
-                <p class="font-bold text-2xl">
-                    Notebook: {{ $note->notebook->name }}
-                </p>  
+                </h3>
+
                 <p class="mt-4 whitespace-pre-wrap text-gray-900 dark:text-gray-100">{{ $note->text }}</p>
             </div>
 
