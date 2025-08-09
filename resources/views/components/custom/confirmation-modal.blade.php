@@ -2,16 +2,16 @@
     @method('delete')
     @csrf
     
-    <button type="button" 
-            class="bg-red-500 hover:bg-red-600 focus:bg-red-600 px-4 py-2 text-white font-bold rounded-lg"
-            onclick="showModal('delete-modal-{{ $note->id }}')">
+    <x-custom.danger-button 
+        type="button" 
+        onclick="showModal('delete-modal-{{ $note->id }}')">
         {{ $slot }}
-    </button>
+    </x-custom.danger-button>
     
     <div id="delete-modal-{{ $note->id }}" class="fixed inset-0 z-50 hidden items-center justify-center bg-gray-900 bg-opacity-50">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-sm mx-auto">
             <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ $title }}</h3>
-            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">Are you sure you want to proceed?</p>
+            <p class="text-sm mt-2 text-gray-600 dark:text-gray-400">{{ $message }}</p>
             
             <div class="mt-4 flex justify-end gap-2">
                 <button type="button"

@@ -1,7 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ !$note->trashed() ? 'Note' : 'Note In Trash' }}
+            @unless ($note->trashed())
+                Note
+            @else
+                Note In Trash
+            @endunless
         </h2>
     </x-slot>
 
@@ -17,13 +21,12 @@
                 {{ session('success') }}
             </x-alert-success>
 
-            @if (!$note->trashed())
+            @unless ($note->trashed())
                 <div class="flex gap-6">
                     <p class="opacity-70">
                         <span class="font-bold">Created:</span> {{ $note->created_at->diffForHumans() }}
                     </p>
-                    @if ($note->updated_at != null)
-                        
+                    @if ($note->updated_at)
                         <p class="bold opacity-70">
                             <span class="font-bold">Last changed:</span> {{ $note->updated_at->diffForHumans() }}
                         </p>
@@ -31,7 +34,11 @@
                     <x-link-button class="ml-auto" href="{{ route('notes.edit', $note) }}">
                         Edit Note
                     </x-link-button>
-                    <x-custom.confirmation-modal :action="route('notes.destroy', $note)" :note="$note" title="Confirmation" confirm-text="Delete">
+                    <x-custom.confirmation-modal 
+                        :action="route('notes.destroy', $note)" 
+                        :note="$note" 
+                        title="Confirmation" 
+                        confirm-text="Delete">
                         Move to Trash
                     </x-custom.confirmation-modal>
                 </div>
@@ -44,22 +51,23 @@
                     <form class="ml-auto" action="{{ route('trashed.update', $note) }}" method="post">
                         @method('put')
                         @csrf
-                        <x-primary-button>Restore</x-primary-button>
+                        <x-custom.secondary-button>Restore</x-custom.secondary-button>
                     </form>
 
-                    <!--
-                    <x-link-button class="ml-auto" href="{{ route('notes.edit', $note) }}">
-                        Edit Note
-                    </x-link-button>
-                    <x-custom.confirmation-modal :action="route('notes.destroy', $note)" :note="$note" title="Confirmation" confirm-text="Delete">
-                        Move to Trash
+                    <x-custom.confirmation-modal 
+                        :action="route('trashed.destroy', $note)" 
+                        :note="$note" 
+                        title="Confirmation Delete"
+                        message="Are you sure you want to permanent delete the note?" 
+                        confirm-text="Delete">
+                        Delete Forever
                     </x-custom.confirmation-modal>
-                    -->
+                    
                 </div>
-            @endif
+            @endunless
 
             <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">
-                <h3 class="font-bold text-2xl text-indigo-600">
+                <h3 class="font-bold text-2xl text-blue-600">
                     {{ $note->title }}
                 </h3>
 
