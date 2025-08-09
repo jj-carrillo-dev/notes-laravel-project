@@ -12,6 +12,27 @@
                     New Note
                 </x-link-button>
             @endif
+            
+            <form action="{{ route('notes.index') }}" method="GET" class="flex items-center gap-4">
+                <div class="w-full sm:w-1/3">
+                    <x-forms.select id="notebook_id" name="notebook_id" class="mt-1 block w-full"
+                                    onchange="this.form.submit()"
+                                    :options="$notebooks->pluck('name', 'id')"
+                                    :selected="request('notebook_id')">
+                        <option value="">-- Select Notebook --</option>
+                    </x-forms.select>
+                </div>
+
+                <div class="w-full sm:w-1/3">
+                    <x-text-input type="text" name="search" placeholder="Search notes..." class="w-full"
+                                    value="{{ request('search') }}"/>
+                </div>
+
+                <div class="w-full sm:w-1/3">
+                    <x-primary-button type="submit">Search</x-primary-button>
+                </div>
+            </form>
+
             @forelse ($notes as $note)
                 <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">
                     <h2 class="font-bold text-2xl text-indigo-600">

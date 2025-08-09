@@ -13,10 +13,30 @@ class NoteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notes = Auth::user()->notes()->paginate(5);
-        return view("notes.index")->with('notes',$notes);
+
+        // Get the collection of all notebooks for the authenticated user
+        $notebooks = Auth::user()->notebooks;
+
+        // Start the notes query
+        $query = Auth::user()->notes()->latest();
+
+        // Apply the filter if a notebook is selected
+        if ($request->filled('notebook_id')) {
+            $query->where('notebook_id', $request->notebook_id);
+        }
+
+        // Apply the search filter if a search term is provided
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Get the filtered notes
+        $notes = $query->paginate(5);
+
+        // Pass the variables to the view
+        return view('notes.index', compact('notes', 'notebooks'));
     }
 
     /**
