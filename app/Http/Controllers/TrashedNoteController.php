@@ -12,4 +12,24 @@ class TrashedNoteController extends Controller
         $notes = Note::whereBelongsTo(Auth::user())->onlyTrashed()->paginate(5);
         return view("notes.index")->with('notes',$notes);
     }
+
+    public function show(Note $note){
+        
+        if ($note->user()->isNot(Auth::user())) {
+            abort(403);
+        }
+
+        return view("notes.show")->with('note',$note);
+    }
+
+    public function update(Note $note){
+        
+        if ($note->user()->isNot(Auth::user())) {
+            abort(403);
+        }
+        
+        $note->restore();
+        
+        return to_route('notes.show',['note'=>$note])->with('success','Note restored');
+    }
 }
