@@ -1,7 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ request()->routeIs('notes.index') ? 'Notes' : 'Trash' }}
+            @unless (request()->routeIs('notes.index'))
+                Trash
+            @else
+                Notes
+            @endunless
         </h2>
     </x-slot>
 
@@ -13,56 +17,11 @@
                 </x-link-button>
             @endif
             
-            <form action="{{ route('notes.index') }}" method="GET" class="flex items-end gap-4">
-                @if (request()->routeIs('notes.index'))
-                    <div class="w-full sm:w-1/3">
-                        <label for="notebook_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Notebook
-                        </label>
-                        <x-forms.select id="notebook_id" name="notebook_id" class="mt-1 block w-full"
-                                        onchange="this.form.submit()"
-                                        :options="$notebooks->pluck('name', 'id')"
-                                        :selected="request('notebook_id')">
-                            <option value="">-- Select Notebook --</option>
-                        </x-forms.select>
-                    </div>
-                @endif
-
-                <div class="w-full sm:w-1/3">
-                    <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Search
-                    </label>
-                    <x-text-input type="text" id="search" name="search" placeholder="Search notes..." class="w-full"
-                                    value="{{ request('search') }}"/>
-                </div>
-
-                <div>
-                    <x-primary-button type="submit">Search</x-primary-button>
-                </div>
-            </form>
+            {{-- Filters --}}
+            <x-custom.note-filter :notebooks="$notebooks" />
 
             @forelse ($notes as $note)
-                <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">
-                    <h2 class="font-bold text-lg text-blue-600">
-                        <a 
-                            @if (request()->routeIs('notes.index'))
-                                href="{{ route('notes.show', $note) }}" 
-                            @else
-                                href="{{ route('trashed.show', $note) }}" 
-                            @endif
-                            class="hover:underline">
-                            {{ $note->title }}
-                        </a>
-                    </h2> 
-                    <p class="mt-2 text-gray-900 dark:text-gray-100">
-                        {{ Str::limit($note->text, 250, '...') }}
-                    </p>
-                    @if ($note->updated_at == null )
-                        <span class="block mt-4 text-sm opacity-70">Created: {{ $note->created_at->diffForHumans() }}</span>
-                    @else
-                        <span class="block mt-4 text-sm opacity-70">Updated: {{ $note->updated_at->diffForHumans() }}</span>
-                    @endif
-                </div>
+                <x-custom.note-card :note="$note" />
             @empty
                 <p class="mt-2 text-gray-900 dark:text-gray-100">
                     You don't have notes

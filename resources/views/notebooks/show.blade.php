@@ -22,7 +22,7 @@
                 </x-link-button>
             </div>
             <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">
-                <h2 class="font-bold text-4xl text-indigo-600">
+                <h2 class="font-bold text-4xl text-red-600">
                     {{ $notebook->name }}
                 </h2> 
             </div>

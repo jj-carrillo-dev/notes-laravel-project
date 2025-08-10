@@ -12,7 +12,7 @@
             </x-link-button>
             @forelse ($notebooks as $notebook)
                 <div class="bg-white dark:bg-gray-800 p-4 overflow-hidden shadow-sm sm:rounded-lg">
-                    <h2 class="font-bold text-lg text-indigo-600">
+                    <h2 class="font-bold text-lg text-red-600">
                         <a href="{{ route('notebooks.show', $notebook) }}" class="hover:underline">
                             {{ $notebook->name }}
                         </a>
