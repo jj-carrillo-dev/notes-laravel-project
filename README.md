@@ -77,13 +77,7 @@ A simple, user-friendly notes management application built with the Laravel 12 f
     npm run dev
     ```
 
-8.  **Compiles frontend asset:**
-
-    ```bash
-    npm run dev
-    ```
-
-9.  **Run the application:**
+8.  **Run the application:**
 
     ```bash
     php artisan serve
