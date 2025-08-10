@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreNoteRequest;
+use App\Http\Requests\UpdateNoteRequest;
 use App\Models\Note;
-use App\Models\Notebook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class NoteController extends Controller
 {
@@ -45,28 +45,20 @@ class NoteController extends Controller
     public function create()
     {
         $notebooks = Auth::user()->notebooks;
+
         return view('notes.create', compact('notebooks'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreNoteRequest $request)
     {
-        $request->validate([
-                            'title'=>'required|max:120',
-                            'text'=>'required',
-                            'notebook_id'=>'required'
-                        ]);
+        $validated = $request->validated();
+        
+        $note = Auth::user()->notes()->create($validated);
 
-        $note = Auth::user()->notes()->create([
-            'uuid' => Str::uuid(),
-            'title' => $request->title,
-            'notebook_id' => $request->notebook_id,
-            'text' => $request->text
-        ]);
-
-        return to_route('notes.show',['note' => $note])->with('success', 'Note Created');
+        return to_route('notes.show', $note)->with('success', 'Note Created');
     }
 
     /**
@@ -74,9 +66,8 @@ class NoteController extends Controller
      */
     public function show(Note $note)
     {
-        if ($note->user()->isNot(Auth::user())) {
-            abort(403);
-        }
+        $this->authorize('view', $note);
+
         return view('notes.show',['note' => $note]);
     }
 
@@ -85,35 +76,23 @@ class NoteController extends Controller
      */
     public function edit(Note $note)
     {
-        if ($note->user()->isNot(Auth::user())) {
-            abort(403);
-        }
+        $this->authorize('view', $note);
+
         $notebooks = Auth::user()->notebooks;
-        return view('notes.edit',['note' => $note, 'notebooks' => $notebooks]);
+
+        return view('notes.edit', compact('note', 'notebooks'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note)
+    public function update(UpdateNoteRequest $request, Note $note)
     {
-        if ($note->user()->isNot(Auth::user())) {
-            abort(403);
-        }
+        $this->authorize('update', $note);
 
-        $request->validate([
-                    'title'=>'required|max:120',
-                    'text'=>'required',
-                    'notebook_id'=>'required'
-        ]);
-
-        $note->update([
-            'title' => $request->title,
-            'notebook_id' => $request->notebook_id,
-            'text' => $request->text
-        ]);
-
-        return to_route('notes.show',['note' => $note])->with('success', 'Changes Saved');
+        $note->update($request->validated());
+        
+        return to_route('notes.show', $note)->with('success', 'Changes Saved');
     }
 
     /**
@@ -121,9 +100,7 @@ class NoteController extends Controller
      */
     public function destroy(Note $note)
     {
-        if ($note->user()->isNot(Auth::user())) {
-            abort(403);
-        }
+        $this->authorize('delete', $note);
 
         $note->delete();
 
