@@ -26,11 +26,13 @@
                     <p class="opacity-70">
                         <span class="font-bold">Created:</span> {{ $note->created_at->diffForHumans() }}
                     </p>
-                    @if ($note->updated_at && $note->created_at->ne($note->updated_at))
-                        <p class="opacity-70">
+                    
+                    @unless($note->created_at->eq($note->updated_at))
+                      <p class="opacity-70">
                             <span class="font-bold">Last changed:</span> {{ $note->updated_at->diffForHumans() }}
                         </p>
-                    @endif
+                    @endunless
+ 
                     <x-link-button class="ml-auto" href="{{ route('notes.edit', $note) }}">
                         Edit Note
                     </x-link-button>

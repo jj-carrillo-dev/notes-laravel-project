@@ -12,9 +12,11 @@
     <p class="mt-2 text-gray-900 dark:text-gray-100">
         {{ Str::limit($note->text, 250, '...') }}
     </p>
-    @unless ($note->updated_at)
-        <span class="block mt-4 text-sm opacity-70">Created: {{ $note->created_at->diffForHumans() }}</span>
-    @else
-        <span class="block mt-4 text-sm opacity-70">Updated: {{ $note->updated_at->diffForHumans() }}</span>
-    @endunless
+    <p class="mt-2">
+        <span class="mt-4 text-sm opacity-70"><span class="font-bold">Created:</span> {{ $note->created_at->diffForHumans() }}</span>
+        @unless($note->created_at->eq($note->updated_at))
+            <span class="mt-4 text-sm opacity-70">| <span class="font-bold">Updated:</span> {{ $note->updated_at->diffForHumans() }}</span>
+        @endunless
+    </p>
+
 </div>
