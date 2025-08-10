@@ -1,10 +1,3 @@
-To make your `README.md` more complete, you should add details about setting up the database and the required PHP extensions.
-
-### Updated `README.md`
-
-Here is the revised `README.md` with the new information included.
-
-````markdown
 ### Notes Manager
 
 A simple, user-friendly notes management application built with the Laravel 12 framework. This project demonstrates core Laravel features, including authentication, CRUD operations, database relationships, and component-based design.
@@ -102,4 +95,3 @@ This project requires a few common PHP extensions. If you encounter errors durin
 3.  Click **New Note** to create your first note.
 4.  You can also create notebooks to organize your notes.
 5.  Deleted notes are sent to the **Trash** and can be restored or permanently deleted.
-````
