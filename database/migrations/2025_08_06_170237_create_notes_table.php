@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('text');
             $table->foreignIdFor(User::class);
             $table->foreignId('notebook_id')->nullable()->constrained('notebooks')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
