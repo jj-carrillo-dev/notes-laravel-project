@@ -23,13 +23,13 @@ class TrashedNoteController extends Controller
     {
         $this->authorize('restore', $note); // Assumes 'restore' policy is created
         $note->restore();
-        return to_route('notes.show', ['note' => $note])->with('success', 'Note restored');
+        return to_route('notes.show', ['note' => $note])->with('success', 'Note Restored');
     }
 
     public function destroy(Note $note)
     {
         $this->authorize('forceDelete', $note); // Assumes 'forceDelete' policy is created
         $note->forceDelete();
-        return to_route('trashed.index')->with('success', 'Note deleted');
+        return to_route('trashed.index')->with('success', 'Note was permanently deleted');
     }
 }
