@@ -126,4 +126,63 @@ class NoteFeatureTest extends TestCase
             'id' => $note->id,
         ]);
     }
+
+    /** @test */
+    public function unauthorized_user_cannot_view_another_users_note(): void
+    {
+        $owner = User::factory()->create();
+        $note = Note::factory()->for($owner)->create();
+
+        $unauthorizedUser = User::factory()->create();
+
+        $response = $this->actingAs($unauthorizedUser)->get(route('notes.show', $note));
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function unauthorized_user_cannot_update_another_users_note(): void
+    {
+        // 1. Setup a note owned by one user
+        $owner = User::factory()->create();
+        $notebook = Notebook::factory()->for($owner)->create();
+        $note = Note::factory()->for($owner)->for($notebook)->create();
+
+        $unauthorizedUser = User::factory()->create();
+
+        $newData = [
+            'title' => $this->faker->sentence(),
+            'text' => $this->faker->paragraph(),
+            'notebook_id' => $note->notebook_id,
+        ];
+
+        $response = $this->actingAs($unauthorizedUser)->put(route('notes.update', $note), $newData);
+        $response->assertStatus(403);
+    }
+
+    /** @test */
+    public function unauthorized_user_cannot_soft_delete_another_users_note(): void
+    {
+        $owner = User::factory()->create();
+        $note = Note::factory()->for($owner)->create();
+
+        $unauthorizedUser = User::factory()->create();
+
+        $response = $this->actingAs($unauthorizedUser)->delete(route('notes.destroy', $note));
+        $response->assertStatus(403);
+    }
+
+
+    /** @test */
+    public function unauthorized_user_cannot_force_delete_another_users_note(): void
+    {
+        $owner = User::factory()->create();
+        $note = Note::factory()->for($owner)->create();
+        $note->delete(); // Soft-delete the note to put it in the "trashed" state
+        
+        $unauthorizedUser = User::factory()->create();
+
+        $response = $this->actingAs($unauthorizedUser)->delete(route('trashed.destroy', $note));
+
+        $response->assertStatus(403);
+    }
 }
