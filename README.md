@@ -30,54 +30,38 @@ A simple, user-friendly notes management application built with the Laravel 12 f
 ### Installation on Linux
 
 1.  **Clone the repository:**
-
     ```bash
     git clone https://github.com/jj-carrillo-dev/notes-laravel-project
     ```
-
 2.  **Install PHP dependencies:**
-
     ```bash
     composer install
     ```
-
 3.  **Install Node.js dependencies:**
-
     ```bash
     npm install
     ```
-
 4.  **Database Setup:**
-
       * Make sure you have a MySQL or MariaDB server running.
       * Create a new database named `notes_manager_laravel`.
       * Duplicate `.env.example` and rename it to `.env`.
       * Configure your database connection in the `.env` file, ensuring `DB_DATABASE` is set to `notes_manager_laravel`.
-
 5.  **Run database migrations:**
-
     ```bash
     php artisan migrate
     ```
-
 6.  **Generate the application key:**
-
     ```bash
     php artisan key:generate
     ```
-
 7.  **Compile front-end assets:**
-
     ```bash
     npm run dev
     ```
-
 8.  **Run the application:**
-
     ```bash
     php artisan serve
     ```
-
     Your application will be available at `http://127.0.0.1:8000`.
 
 -----
@@ -89,22 +73,23 @@ This project requires a few common PHP extensions. If you encounter errors durin
   * **`php8.3-mysql`:** Required for MySQL database connectivity.
   * **`php8.3-mbstring`:** Required for multibyte string handling.
   * **`php8.3-xml`:** Required by various Composer packages.
+  * **`php8.3-sqlite3`:** Required for running the test suite.
 
 -----
 
-### Running Tests
+### Running Tests 🧪
 
-This project includes a full test suite. To run them, follow these steps:
+This project includes a comprehensive test suite to ensure functionality and prevent regressions.
 
-1.  **Create a test database:**
-      * Create a new database named **`notes_laravel_test`** on your MySQL or MariaDB server.
-2.  **Configure the test environment:**
-      * Copy the **`.env.testing.example`** file and rename it to **`.env.testing`**.
-      * Edit the `.env.testing` file to configure your test database credentials (username and password).
-3.  **Execute the tests:**
-    ```bash
-    php artisan test
-    ```
+To run the tests, simply execute the following command:
+
+```bash
+php artisan test
+```
+
+**How it Works:**
+
+Laravel's test runner automatically handles the test database for you. It uses the `sqlite` driver in memory to ensure tests are isolated and do not interfere with your main database. This means you do not have to create or configure a separate test database.
 
 -----
 

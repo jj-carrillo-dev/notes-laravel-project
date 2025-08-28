@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-4">
+        <div class="flex flex-col sm:flex-row items-center gap-4">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 @unless ($note->trashed())
                     Note: {{ $note->title }}
@@ -14,7 +14,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 px-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <x-alert-success>
@@ -22,20 +22,25 @@
             </x-alert-success>
 
             @unless ($note->trashed())
-                <div class="flex gap-6">
+                {{-- Make this div a column on mobile, row on small screens and up --}}
+                <div class="flex flex-col sm:flex-row gap-6">
                     <p class="opacity-70">
                         <span class="font-bold">Created:</span> {{ $note->created_at->diffForHumans() }}
                     </p>
                     
                     @unless($note->created_at->eq($note->updated_at))
-                      <p class="opacity-70">
+                        <p class="opacity-70">
                             <span class="font-bold">Last changed:</span> {{ $note->updated_at->diffForHumans() }}
                         </p>
                     @endunless
  
-                    <x-link-button class="ml-auto" href="{{ route('notes.edit', $note) }}">
-                        Edit Note
-                    </x-link-button>
+                    {{-- Change ml-auto to ml-0 on mobile --}}
+                    <div>
+
+                        <x-custom.edit-button class="" href="{{ route('notes.edit', $note) }}">
+                            Edit Note
+                        </x-custom.edit-button>
+                    </div>
                     <x-custom.confirmation-modal
                         :action="route('notes.destroy', $note)"
                         :note="$note"
@@ -45,12 +50,14 @@
                     </x-custom.confirmation-modal>
                 </div>
             @else
-                <div class="flex gap-6">
+                {{-- Make this div a column on mobile, row on small screens and up --}}
+                <div class="flex flex-col sm:flex-row gap-6">
                     <p class="opacity-70">
                         <span class="font-bold">Deleted:</span> {{ $note->deleted_at->diffForHumans() }}
                     </p>
 
-                    <x-custom.restore-button class="ml-auto" :action="route('trashed.update', $note)">
+                    {{-- Change ml-auto to ml-0 on mobile --}}
+                    <x-custom.restore-button class="ml-0 sm:ml-auto" :action="route('trashed.update', $note)">
                         Restore
                     </x-custom.restore-button>
                     <x-custom.confirmation-modal

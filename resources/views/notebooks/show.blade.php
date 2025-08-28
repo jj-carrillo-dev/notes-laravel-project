@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 px-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="flex gap-6">
                 <p class="opacity-70">
@@ -25,6 +25,9 @@
                 <h2 class="font-bold text-4xl text-red-600">
                     {{ $notebook->name }}
                 </h2> 
+                <p class="bold opacity-70 mt-5">
+                    <span class="font-bold">Order:</span> {{ $notebook->order }}
+                </p>
             </div>
 
         </div>

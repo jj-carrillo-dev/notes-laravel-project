@@ -33,10 +33,12 @@ class NotebookController extends Controller
     {
         $request->validate([
                             'name'=>'required|max:120',
+                            'order' => 'required|integer|min:1|max:9',
                         ]);
         $notebook = new Notebook([
             'user_id' => Auth::id(),
-            'name' => $request->name
+            'name' => $request->name,
+            'order' => $request->order,
         ]);
         $notebook->save();
         return view('notebooks.show',['notebook' => $notebook]);
@@ -58,7 +60,11 @@ class NotebookController extends Controller
      */
     public function edit(Notebook $notebook)
     {
-        //
+        $this->authorize('view', $notebook);
+
+        $notebooks = Auth::user()->notebooks;
+
+        return view('notebooks.edit', compact('notebook', 'notebooks'));
     }
 
     /**
@@ -66,7 +72,16 @@ class NotebookController extends Controller
      */
     public function update(Request $request, Notebook $notebook)
     {
-        //
+        $request->validate([
+            'name' => 'required|max:120',
+            'order' => 'required|integer|min:1|max:9',
+        ]);
+
+        $notebook->name = $request->name;
+        $notebook->order = $request->order;
+        $notebook->update();
+
+        return to_route('notebooks.show', $notebook)->with('success', 'Changes Saved');
     }
 
     /**
