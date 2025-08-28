@@ -4,7 +4,8 @@
     
     <x-custom.danger-button 
         type="button" 
-        onclick="showModal('delete-modal-{{ $note->id }}')">
+        onclick="showModal('delete-modal-{{ $note->id }}')"
+        class="w-auto">
         {{ $slot }}
     </x-custom.danger-button>
     

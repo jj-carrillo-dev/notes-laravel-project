@@ -17,7 +17,7 @@ class NoteController extends Controller
     {
 
         // Get the collection of all notebooks for the authenticated user
-        $notebooks = Auth::user()->notebooks;
+        $notebooks = Auth::user()->notebooks()->orderBy('order')->get();
 
         // Start the notes query
         $query = Auth::user()->notes()->latest();
@@ -44,7 +44,7 @@ class NoteController extends Controller
      */
     public function create()
     {
-        $notebooks = Auth::user()->notebooks;
+        $notebooks = Auth::user()->notebooks()->orderBy('order')->get();
 
         return view('notes.create', compact('notebooks'));
     }
@@ -78,7 +78,7 @@ class NoteController extends Controller
     {
         $this->authorize('view', $note);
 
-        $notebooks = Auth::user()->notebooks;
+        $notebooks = Auth::user()->notebooks()->orderBy('order')->get();
 
         return view('notes.edit', compact('note', 'notebooks'));
     }
