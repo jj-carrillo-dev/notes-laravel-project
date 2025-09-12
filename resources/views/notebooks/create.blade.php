@@ -9,7 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="bg-white dark:bg-gray-800 p-6 overflow-hidden shadow-sm sm:rounded-lg">
                 <form action="{{ route('notebooks.store') }}" method="post">
-                    @method('put')    
+                    @if (isset($notebook))
+                        @method('put')
+                    @endif
                     @csrf
 
                     <div class="mb-4">
